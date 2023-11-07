@@ -14,30 +14,30 @@ import { CssBaseline, IconButton, Toolbar, Typography } from "@mui/material";
 
 const drawerWidth = 240;
 
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+  open?: boolean;
+}>(({ theme, open }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(0),
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: `-${drawerWidth}px`,
+  ...(open && {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  }),
+}));
+
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
-const openedMixin = (theme:Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflow: 'hidden',
-})
 
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -56,7 +56,7 @@ const AppBar = styled(MuiAppBar , {
       duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-       width: `cals(100% - ${drawerWidth}px)`,
+       width: `calc(100% - ${drawerWidth}px)`,
        marginLeft: `${drawerWidth}px`, 
       transition: theme.transitions.create(['margin','width'], {
         easing: theme.transitions.easing.easeOut,
@@ -65,24 +65,6 @@ const AppBar = styled(MuiAppBar , {
     }),
   }));
 
-
-
-// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-//   ({ theme, open }) => ({
-//     width: drawerWidth,
-//     flexShrink: 0,
-//     whiteSpace: 'nowrap',
-//     boxSizing: 'border-box',
-//     ...(open && {
-//       ...openedMixin(theme),
-//       '& .MuiDrawer-paper': openedMixin(theme),
-//     }),
-//     ...(!open && {
-//       ...closedMixin(theme),
-//       '& .MuiDrawer-paper': closedMixin(theme),
-//     }),
-//   }),
-// );
 
 function App() {
 
@@ -136,15 +118,15 @@ const handleDrawerClose = () => {
       </DrawerHeader>
       <Divider/>
       </Drawer>
-    <>
-
+    <Main open={open}>
+      <DrawerHeader />
       <MapContainer center={[51.505, -0.09]} zoom={13} >
        <TileLayer
        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
        />
     </MapContainer>
-    </>
+    </Main>
     </Box>
   )
 }
