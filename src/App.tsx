@@ -9,7 +9,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
 import { CssBaseline, IconButton, Toolbar, Typography } from "@mui/material";
 
 const drawerWidth = 240;
@@ -18,13 +18,14 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
-  padding: theme.spacing(0),
+  paddingTop: '64px',
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
+    paddingTop: '64px',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -119,8 +120,8 @@ const handleDrawerClose = () => {
       <Divider/>
       </Drawer>
     <Main open={open}>
-      <DrawerHeader />
-      <MapContainer center={[51.505, -0.09]} zoom={13} >
+      <MapContainer center={[51.505, -0.09]} zoom={13} zoomControl={false} >
+        
        <TileLayer
        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
