@@ -58,7 +58,7 @@ const AppBar = styled(MuiAppBar , {
     }),
     ...(open && {
        width: `calc(100% - ${drawerWidth}px)`,
-       marginLeft: `${drawerWidth}px`, 
+       marginLeft: `${drawerWidth}px`,
       transition: theme.transitions.create(['margin','width'], {
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
@@ -84,7 +84,7 @@ const handleDrawerClose = () => {
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton 
+          <IconButton
           color='inherit'
           aria-label='open drawer'
           onClick={handleDrawerOpen}
@@ -114,14 +114,14 @@ const handleDrawerClose = () => {
       >
       <DrawerHeader>
         <IconButton onClick={handleDrawerClose}>
-          {theme.direction === 'ltr' ? <ChevronLeftIcon/> :<ChevronRightIcon/> } 
+          {theme.direction === 'ltr' ? <ChevronLeftIcon/> :<ChevronRightIcon/> }
         </IconButton>
       </DrawerHeader>
       <Divider/>
       </Drawer>
     <Main open={open}>
-      <MapContainer center={[51.505, -0.09]} zoom={13} zoomControl={false} >
-        
+      <MapContainer center={[19.432, -99.133]} zoom={11} zoomControl={false} >
+
        <TileLayer
        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
