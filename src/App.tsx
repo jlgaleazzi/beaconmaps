@@ -1,5 +1,5 @@
 
-import "leaflet/dist/leaflet.css";
+
 import  {useState} from 'react';
 import {styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import MuiAppBar, {AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -9,9 +9,10 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
+import Map from './components/Map';
+
 import { CssBaseline, IconButton, ThemeProvider, Toolbar, Typography, createTheme } from "@mui/material";
-import MenuList from "./components/menuList";
+import MenuList from "./components/menu/menuList";
 
 const drawerWidth = 240;
 
@@ -129,13 +130,7 @@ const handleDrawerClose = () => {
         <MenuList />
         </Drawer>
       <Main open={open}>
-        <MapContainer center={[19.432, -99.133]} zoom={11} zoomControl={false} >
-
-        <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      </MapContainer>
+        <Map />
       </Main>
       </Box>
     </ThemeProvider>
