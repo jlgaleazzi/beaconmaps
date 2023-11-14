@@ -10,7 +10,6 @@ const beaconMap = () => {
        
         const map = useMapEvents({
             click(e) {
-                console.log(JSON.stringify(e.latlng))
                 setMarkers([...markers, e.latlng]);
             }
         })
