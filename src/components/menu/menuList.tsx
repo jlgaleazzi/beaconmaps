@@ -55,7 +55,7 @@ const MenuList = () => {
                         <ListItemText primary='Unidades' />
                     </ListItemButton>
                 </ListItem>
-                <ListItem key='units'
+                <ListItem key='stores'
                 secondaryAction={
                     <Checkbox 
                     edge='end'

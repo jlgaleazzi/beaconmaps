@@ -1,13 +1,17 @@
-import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer,useMapEvents, Marker, Popup, ZoomControl } from "react-leaflet";
 
+import React, {useState}  from 'react';
+import { MapContainer, TileLayer,useMapEvents, Marker, Popup, ZoomControl } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { LatLng } from 'leaflet';
 const beaconMap = () => {
+    const [markers, setMarkers] = useState<LatLng[]>([]);
 
     const MyMarker  = () => {
        
         const map = useMapEvents({
             click(e) {
                 console.log(JSON.stringify(e.latlng))
+                setMarkers([...markers, e.latlng]);
             }
         })
         return null;
@@ -19,6 +23,11 @@ const beaconMap = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            {markers.map((mark:LatLng, index:number) => {
+                return (
+                    <Marker position={mark} key={index}></Marker>
+                )
+            })}
         <MyMarker/>
       </MapContainer>
     )
