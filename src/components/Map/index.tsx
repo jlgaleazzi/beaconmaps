@@ -1,18 +1,19 @@
 
 import {useState}  from 'react';
-import { MapContainer, TileLayer,useMapEvents, Marker, Popup, ZoomControl, LayerGroup, LayersControl } from "react-leaflet";
+import { MapContainer, TileLayer,useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLng } from 'leaflet';
 import Units from './Layers/units';
+import IUnit from './Layers/Iunits';
 const beaconMap = () => {
-    const [markers, setMarkers] = useState<LatLng[]>([]);
+    const [markers, setMarkers] = useState<IUnit[]>([]);
 
     const MyMarker  = () => {
        
          useMapEvents({
           
             click(e) {
-                setMarkers([...markers, e.latlng]);
+                let newTruck:IUnit = {location: e.latlng}
+                setMarkers([...markers, newTruck]);
             }
         })
         return null;

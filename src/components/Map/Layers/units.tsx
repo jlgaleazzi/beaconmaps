@@ -1,9 +1,10 @@
-import { LatLng } from "leaflet";
 import { LayerGroup, Marker} from "react-leaflet";
+import IUnit from "./Iunits";
 
 
 interface UnitsProps {
-    trucks:LatLng[];
+    
+    trucks:IUnit[];
 
 }
 
@@ -11,9 +12,9 @@ const Units = (props:UnitsProps) => {
     return (
         <LayerGroup>
 
-        {props.trucks.map((mark:LatLng, index:number) => {
+        {props.trucks.map((mark:IUnit, index:number) => {
             return (
-                <Marker position={mark} key={index} ></Marker>
+                <Marker position={mark.location} key={index} ></Marker>
         )
     })}
     </LayerGroup>
