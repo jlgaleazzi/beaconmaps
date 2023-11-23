@@ -4,15 +4,19 @@ import { MapContainer, TileLayer,useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Units from './Layers/units';
 import IUnit from './Layers/Iunits';
+import truckGenerator from '../../utils/truckgenerator';
 const beaconMap = () => {
     const [markers, setMarkers] = useState<IUnit[]>([]);
+    const [unitNumber,setUnitNumber] = useState(1)
 
     const MyMarker  = () => {
        
          useMapEvents({
           
             click(e) {
-                let newTruck:IUnit = {location: e.latlng}
+                
+                let newTruck:IUnit = truckGenerator(e.latlng, unitNumber);
+                setUnitNumber(unitNumber + 1);
                 setMarkers([...markers, newTruck]);
             }
         })

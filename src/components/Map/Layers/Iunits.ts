@@ -7,7 +7,7 @@ interface IUnit {
     lastUpdated?: Date,
     origin?: string | LatLng, 
     destination?: string | LatLng ,
-    status?: "onroute" | "delivering" | "idle",
+    status?: "En ruta" | "Entregando" | "Parado",
 }
 
 export default IUnit;

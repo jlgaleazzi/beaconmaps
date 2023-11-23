@@ -9,6 +9,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Save from '@mui/icons-material/Save';
 import Map from './components/Map';
 
 import { CssBaseline, IconButton, ThemeProvider, Toolbar, Typography, createTheme } from "@mui/material";
@@ -106,6 +107,12 @@ const handleDrawerClose = () => {
             <Typography variant='h6' noWrap component='div'>
               Transportes Pegaso
             </Typography>
+            <Box sx={{flexGrow:1}}/>
+            <Box sx={{display: {xs: 'none', md: 'flex'}}}>
+              <IconButton size='large' aria-label="Generate">
+                <Save/>
+              </IconButton>
+            </Box>
           </Toolbar>
         </AppBar>
         <Drawer
