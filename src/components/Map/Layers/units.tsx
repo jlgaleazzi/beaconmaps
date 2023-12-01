@@ -5,12 +5,11 @@ import IUnit from "./Iunits";
 interface UnitsProps {
     
     trucks:IUnit[];
-    visible:boolean,
 
 }
 
 const Units = (props:UnitsProps) => {
-   
+    return (
         <LayerGroup>
 
         {props.trucks.map((mark:IUnit, index:number) => {
@@ -20,7 +19,7 @@ const Units = (props:UnitsProps) => {
     })}
     </LayerGroup>
        
-
+        );
 }
     
 
