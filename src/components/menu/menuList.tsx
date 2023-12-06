@@ -4,26 +4,22 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
-
+import { toggleVisiblity } from '../Map/Layers/layerSlice';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { Layer } from '../Map/Layers/ILayer';
 
 const MenuList = () => {
-    const [checked,setChecked] = useState([1])
+    const layers = useAppSelector((state) => state.layers.layers);
+    const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false)
     const handleClick = () => {
         setOpen(!open)
     }
 
-    const handleToggle = (value:number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value)
-        } else {
-            newChecked.splice(currentIndex, 1)
-        }
-
-        setChecked(newChecked);
+    const handleToggle = (lyr:Layer) => () => {
+      
+        dispatch(toggleVisiblity(lyr))
+     
     }
 
     return (
@@ -41,38 +37,23 @@ const MenuList = () => {
         </ListItemButton>    
         <Collapse in={open} timeout='auto' unmountOnExit>
             <List component='div' disablePadding>
-                <ListItem key='units'
+              {layers.map((layer)=> (
+                <ListItem key={layer.id} 
                 secondaryAction={
-                    <Checkbox 
-                    edge='end'
-                    onChange={handleToggle(1)}
-                    checked={checked.indexOf(1) !== -1}
-                     />
-                }
-                disablePadding
+                        <Checkbox edge='end'
+                        onChange={handleToggle(layer)}
+                        checked={layer.visible} 
+                    />
+                    }
+                    disablePadding
                 >
-                    <ListItemButton sx={{pl:4}}>
-                        <ListItemText primary='Unidades' />
+                     <ListItemButton sx={{pl:4}}>
+                        <ListItemText primary={layer.label} />
                     </ListItemButton>
                 </ListItem>
-                <ListItem key='stores'
-                secondaryAction={
-                    <Checkbox 
-                    edge='end'
-                    onChange={handleToggle(2)}
-                    checked={checked.indexOf(2) !== -1}
-                     />
-                }
-                disablePadding
-                >
-                    <ListItemButton sx={{pl:4}}>
-                        <ListItemText primary='Almacenes' />
-                    </ListItemButton>
-                </ListItem>
-
-              
+              ))
+              }
             </List>
-
         </Collapse>
         </List>
     )
