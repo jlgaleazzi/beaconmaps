@@ -4,7 +4,7 @@ import IUnit from "./Iunits";
 
 interface UnitsProps {
     
-    trucks:IUnit[];
+    trucks?:IUnit[];
 
 }
 
@@ -12,7 +12,7 @@ const Units = (props:UnitsProps) => {
     return (
         <LayerGroup>
 
-        {props.trucks.map((mark:IUnit, index:number) => {
+        {props.trucks?.map((mark:IUnit, index:number) => {
             return (
                 <Marker position={mark.location} key={index} ></Marker>
         )

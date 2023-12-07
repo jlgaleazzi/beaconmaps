@@ -1,12 +1,15 @@
 
 import {useState}  from 'react';
 import { MapContainer, TileLayer,useMapEvents } from "react-leaflet";
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { addUnit } from './Layers/layerSlice';
 import "leaflet/dist/leaflet.css";
 import Units from './Layers/units';
 import IUnit from './Layers/Iunits';
 import truckGenerator from '../../utils/truckgenerator';
 const beaconMap = () => {
-    const [markers, setMarkers] = useState<IUnit[]>([]);
+    const dispatch = useAppDispatch();
+    const layers = useAppSelector((state) => state.layers.layers);
     const [unitNumber,setUnitNumber] = useState(1)
 
     const MyMarker  = () => {
@@ -17,7 +20,7 @@ const beaconMap = () => {
                 
                 let newTruck:IUnit = truckGenerator(e.latlng, unitNumber);
                 setUnitNumber(unitNumber + 1);
-                setMarkers([...markers, newTruck]);
+                dispatch(addUnit({layerId:'0',unit:newTruck}))
             }
         })
         return null;
@@ -29,7 +32,11 @@ const beaconMap = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Units trucks={markers} />
+            {layers.map((layer) => ( 
+             layer.visible &&
+                <Units key={layer.id} trucks={layer.units} />
+            ))}
+           
         <MyMarker/>
       </MapContainer>
     )
