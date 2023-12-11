@@ -137,7 +137,7 @@ const handleDrawerClose = () => {
         <MenuList />
         </Drawer>
       <Main open={open}>
-        <Map />
+
       </Main>
       </Box>
     </ThemeProvider>

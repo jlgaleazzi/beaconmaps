@@ -2,12 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <script
+    src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.core.js"
+    crossorigin async
+    data-callback="initMapKit"
+    data-libraries="map"
+    data-initial-token="eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlRGUjczSzRHUFkifQ.eyJpc3MiOiI0RzYyUTk5SjNSIiwiaWF0IjoxNzAyMDA3MDgxLCJleHAiOjE3MDQ1OTg3MjF9.eU6LGUmNvw-F7Oru5PmPZkcLKB6i8c2gFQl6jDS-GxBWr3Hncd5UYviX2uj9s8wUbyQS8BGnUawcvTEVQpDPWQ"
+  ></script>
+  <style>
+    #map {
+      width:  100vw;
+      padding-top: 64px;
+      height: calc(100vh - 64px);
+    }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Beacon Map</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="map"></div>
+
+<script type="module">
+
+(async () => {
+    const tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlRGUjczSzRHUFkifQ.eyJpc3MiOiI0RzYyUTk5SjNSIiwiaWF0IjoxNzAyMDA3MDgxLCJleHAiOjE3MDQ1OTg3MjF9.eU6LGUmNvw-F7Oru5PmPZkcLKB6i8c2gFQl6jDS-GxBWr3Hncd5UYviX2uj9s8wUbyQS8BGnUawcvTEVQpDPWQ";
+
+    if (!window.mapkit || window.mapkit.loadedLibraries.length === 0) {
+        // mapkit.core.js or the libraries are not loaded yet.
+        // Set up the callback and wait for it to be called.
+        await new Promise(resolve => { window.initMapKit = resolve });
+
+        // Clean up
+        delete window.initMapKit;
+    }
+
+    mapkit.init({
+        authorizationCallback: function(done) {
+            done(tokenID);
+        }
+    });
+
+    const map = new mapkit.Map("map");
+})();
+
+</script>
+   <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
