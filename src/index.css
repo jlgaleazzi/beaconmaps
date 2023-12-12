@@ -68,8 +68,3 @@ button:focus-visible {
   }
 }
 
-.leaflet-container {
-  width:  100vw;
-  padding-top: 64px;
-  height: calc(100vh - 64px);
-}
