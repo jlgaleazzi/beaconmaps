@@ -8,15 +8,26 @@ const BeaconMap = () => {
     const dispatch = useAppDispatch();
     const [mapLongitude,setMapLongitude] = useState(-99.133)
     const [mapLatitude, setMapLatitude] = useState(19.432)
-    const [map, setMap] = useState({})
-    const [mapZoom, setMapZoom] = useState(8)
     const mapElement = useRef(null);
+    const [mapZoom, setMapZoom] = useState(8)
+    const [map, setMap] = useState<tt.Map>()
+  
+ 
     
     const layers = useAppSelector((state) => state.layers.layers);
     const [unitNumber,setUnitNumber] = useState(1)
+    
+    const addMarkers = () => {
+        if (map)  {
+            new tt.Marker()
+            .setLngLat({lng:-99.133, lat:19.432})
+            .addTo(map)
+        }
+    }
 
    
     useEffect(()=>  {
+  
         const ttmap = tt.map({
             key: 'GWppGGSQTAElC4Z4Qz5ZAGjsIlTh3h3G' ,
             container: mapElement.current,
@@ -24,15 +35,18 @@ const BeaconMap = () => {
             zoom: mapZoom,
     
          });
-        setMap(ttmap);
+         setMap(ttmap);
+        
         return () => ttmap.remove();
     },[])
 
+    useEffect(() => {
+        addMarkers();
+    },[map])
+
+
     return (
-      
-           
        <div ref={mapElement} className='mapDiv'/>
-     
     )
 }
 
