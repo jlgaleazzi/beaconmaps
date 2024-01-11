@@ -17,13 +17,13 @@ const nombres: string[] = [
    ' Erico',
 ]
 
-const immuebleTipo: string = [
+const immuebleTipo: string[] = [
     'Almacen',
     'Deposito',
     'Central',
 ]
 
-const estatus: string = [
+const estatus: string[] = [
     'En ruta',
     'Entregando',
     'Parado'
