@@ -1,7 +1,7 @@
 const express = require("express");
 const Path = require("path");
 const port = 3001;
-const app = express;
+const app = express();
 
 app.use((_,res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -10,7 +10,7 @@ app.use((_,res, next) => {
     next();
 });
 
-app.use(express.static(Path.join(__dirname, "../build")));
+app.use(express.static(Path.join(__dirname, "../dist")));
 app.use(express.json());
 app.listen(port, () => console.log(`Express listening on port ${port}`));
 
