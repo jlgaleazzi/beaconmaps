@@ -1,12 +1,11 @@
 import _default from "@emotion/styled";
-import { LatLng } from "leaflet";
 
 interface IUnit {
-    location: LatLng,
+    location: {lat:number, lng:number},
     identifier?: string,
     lastUpdated?: Date,
-    origin?: string | LatLng, 
-    destination?: string | LatLng ,
+    origin?: string | {lat:number, lng:number},
+    destination?: string | {lat:number, lng:number} ,
     status?: "En ruta" | "Entregando" | "Parado",
 }
 
