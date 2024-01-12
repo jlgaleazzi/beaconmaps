@@ -15,13 +15,17 @@ const BeaconMap = () => {
  
     
     const layers = useAppSelector((state) => state.layers.layers);
-    const [unitNumber,setUnitNumber] = useState(1)
+   /
     
     const addMarkers = () => {
         if (map)  {
-            new tt.Marker()
-            .setLngLat({lng:-99.133, lat:19.432})
-            .addTo(map)
+            layers[0].units?.forEach((unit) => {
+                const location = unit.location;
+                new tt.Marker()
+                .setLngLat({lng:location.lng, lat:location.lat})
+                .addTo(map)
+            })
+           
         }
     }
 
