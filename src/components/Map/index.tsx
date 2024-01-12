@@ -15,7 +15,7 @@ const BeaconMap = () => {
  
     
     const layers = useAppSelector((state) => state.layers.layers);
-   /
+   
     
     const addMarkers = () => {
         if (map)  {
