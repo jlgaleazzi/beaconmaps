@@ -5,7 +5,7 @@ import { client } from  '../../../api/client'
 export interface IssueInitialState {
   layers: Layer[],
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
-  error: 'string' | null,
+  error: string | null | undefined,
 }
 const initialState: IssueInitialState =
                     {
@@ -14,10 +14,10 @@ const initialState: IssueInitialState =
                       error: null,
                     }
 
-export const fetchLayers = createAsyncThunk('posts/fetchLayers', async() => {
-  const response = await  client.get('/units');
-  return response.
-})
+export const fetchLayers = createAsyncThunk('units/fetchLayers', async() => {
+   const response = await client.get('/units')
+   return response.layers;
+},)
 
 export const layerSlice = createSlice({
   name:'layers',
@@ -37,6 +37,23 @@ export const layerSlice = createSlice({
       state.layers[layerIndex].units?.push(unit);
     },
   },
+  extraReducers : (builder) => {
+    builder.addCase(fetchLayers.pending, (state,action) => {
+      state.status = 'loading'
+      })
+    builder.addCase(fetchLayers.fulfilled , (state, action) => {
+      if (state.status === 'loading') {
+        state.status = 'succeeded'
+        state.layers = action.payload
+      }
+    })
+    builder.addCase(fetchLayers.rejected , (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message;
+    })
+
+
+  }
 
 }
 

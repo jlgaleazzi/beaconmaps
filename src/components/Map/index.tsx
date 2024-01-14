@@ -3,6 +3,7 @@ import {useState, useRef, useEffect}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { fetchLayers } from './Layers/layerSlice';
 
 const BeaconMap = () => {
     const dispatch = useAppDispatch();
@@ -15,10 +16,10 @@ const BeaconMap = () => {
  
     
     const layers = useAppSelector((state) => state.layers.layers);
-   
+    const layerStatus = useAppSelector((state) => state.layers.status)
     
     const addMarkers = () => {
-        if (map)  {
+        if (map !== undefined && layers[0].units)  {
             layers[0].units?.forEach((unit) => {
                 const location = unit.location;
                 new tt.Marker()
@@ -31,7 +32,6 @@ const BeaconMap = () => {
 
    
     useEffect(()=>  {
-  
         const ttmap = tt.map({
             key: 'GWppGGSQTAElC4Z4Qz5ZAGjsIlTh3h3G' ,
             container: mapElement.current,
@@ -45,8 +45,16 @@ const BeaconMap = () => {
     },[])
 
     useEffect(() => {
-        addMarkers();
-    },[map])
+       if (Array.isArray(layers) && layers.length > 0)
+            addMarkers();
+    },[layers])
+
+    useEffect(() => {
+        if (map !== undefined  && layerStatus === 'idle') {
+            console.log('dispatch fetchLayer')
+            dispatch(fetchLayers());
+        }
+    }, [map, layerStatus, dispatch])
 
 
     return (

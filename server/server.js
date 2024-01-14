@@ -23,6 +23,7 @@ app.get("/units", (req , res) => {
             return;
         }
         const jsonData = JSON.parse(data);
+        console.log('/units called')
         res.json(jsonData);
             })
         });
