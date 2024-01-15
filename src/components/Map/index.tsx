@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css";
 import Units from './Layers/units';
 import IUnit from './Layers/Iunits';
 import truckGenerator from '../../utils/truckgenerator';
-const beaconMap = () => {
+const BeaconMap = () => {
     const dispatch = useAppDispatch();
     const layers = useAppSelector((state) => state.layers.layers);
     const [unitNumber,setUnitNumber] = useState(1)
@@ -18,7 +18,7 @@ const beaconMap = () => {
           
             click(e) {
                 
-                let newTruck:IUnit = truckGenerator(e.latlng, unitNumber);
+                const newTruck:IUnit = truckGenerator(e.latlng, unitNumber);
                 setUnitNumber(unitNumber + 1);
                 dispatch(addUnit({layerId:'0',unit:newTruck}))
             }
@@ -42,4 +42,4 @@ const beaconMap = () => {
     )
 }
 
-export default beaconMap;
+export default BeaconMap;

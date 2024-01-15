@@ -28,11 +28,15 @@ export const layerSlice = createSlice({
       const {layerId, unit} = payload;
       const layerIndex = state.layers.findIndex((layer) => layer.id ===layerId);
       state.layers[layerIndex].units?.push(unit);
+    },
+    saveLayers: (state ) => {
+      console.log(JSON.stringify(state.layers))
     }
+
   },
  
 }
 
 )
-export const {toggleVisiblity, addUnit} = layerSlice.actions;
+export const {toggleVisiblity, addUnit, saveLayers} = layerSlice.actions;
 export default layerSlice.reducer

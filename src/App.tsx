@@ -1,7 +1,7 @@
 
 
 import  {useState} from 'react';
-import {styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
+import {styled, useTheme } from '@mui/material/styles';
 import MuiAppBar, {AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -9,6 +9,8 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useAppDispatch } from './app/hooks';
+import { saveLayers } from './components/Map/Layers/layerSlice';
 import Save from '@mui/icons-material/Save';
 import Map from './components/Map';
 
@@ -71,7 +73,7 @@ const AppBar = styled(MuiAppBar , {
 
 
 function App() {
-
+const dispatch = useAppDispatch();
 const theme = useTheme();
 const dark = createTheme({
   palette: {
@@ -87,6 +89,10 @@ const handleDrawerOpen = () => {
 
 const handleDrawerClose = () => {
   setOpen(false);
+}
+
+const handleSave = () => {
+  dispatch(saveLayers())
 }
   return (
     <ThemeProvider theme={dark}>
@@ -109,7 +115,7 @@ const handleDrawerClose = () => {
             </Typography>
             <Box sx={{flexGrow:1}}/>
             <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-              <IconButton size='large' aria-label="Generate">
+              <IconButton size='large' aria-label="Generate" onClick={handleSave}>
                 <Save/>
               </IconButton>
             </Box>
