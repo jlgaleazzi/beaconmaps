@@ -1,4 +1,3 @@
-
 import {useState, useRef, useEffect}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
@@ -11,6 +10,7 @@ const BeaconMap = () => {
     const [mapLatitude, setMapLatitude] = useState(19.432)
     const mapElement = useRef(null);
     const [mapZoom, setMapZoom] = useState(8)
+    const [timer, setTimer] = useState(0);
     const [map, setMap] = useState<tt.Map>()
   
  
@@ -30,6 +30,11 @@ const BeaconMap = () => {
         }
     }
 
+    const timerHandler = () => {
+        console.log ('timer loading');
+        dispatch(fetchLayers());
+    }
+
    
     useEffect(()=>  {
         const ttmap = tt.map({
@@ -42,6 +47,7 @@ const BeaconMap = () => {
          setMap(ttmap);
         
         return () => ttmap.remove();
+       
     },[])
 
     useEffect(() => {
@@ -53,6 +59,8 @@ const BeaconMap = () => {
         if (map !== undefined  && layerStatus === 'idle') {
             console.log('dispatch fetchLayer')
             dispatch(fetchLayers());
+            const timer = setInterval(timerHandler, 60000);
+            setTimer(timer);
         }
     }, [map, layerStatus, dispatch])
 
