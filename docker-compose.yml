@@ -1,0 +1,14 @@
+version: '1.0'
+services:
+  vite_docker:
+    image: node:alpine
+    container_name: beacon_maps
+    entrypoint: /bin/sh
+    ports:
+      - 8000:8000
+    working_dir: /usr/src/app
+    volumes:
+      - type: bind
+        source: ./
+        target: /srv/app
+    tty: true

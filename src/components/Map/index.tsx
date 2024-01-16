@@ -1,33 +1,69 @@
-import {useState, useRef, useEffect}  from 'react';
+import {useState, useRef, useEffect, createElement}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { fetchLayers } from './Layers/layerSlice';
-
+import truckIcon from '../../assets/truckIcon.png'
 const BeaconMap = () => {
+
+    interface Marker {
+        id: string | undefined;
+        obj: tt.Marker;
+    }
     const dispatch = useAppDispatch();
-    const [mapLongitude,setMapLongitude] = useState(-99.133)
-    const [mapLatitude, setMapLatitude] = useState(19.432)
+    const [mapLongitude,setMapLongitude] = useState(-102.15735)
+    const [mapLatitude, setMapLatitude] = useState(23.22123)
     const mapElement = useRef(null);
-    const [mapZoom, setMapZoom] = useState(8)
+    const [mapZoom, setMapZoom] = useState(5)
     const [timer, setTimer] = useState(0);
     const [map, setMap] = useState<tt.Map>()
-  
- 
-    
+    const [markers, setMarkers]  = useState<Marker[]>([])
+
+
     const layers = useAppSelector((state) => state.layers.layers);
     const layerStatus = useAppSelector((state) => state.layers.status)
-    
+
+
+
     const addMarkers = () => {
         if (map !== undefined && layers[0].units)  {
-            layers[0].units?.forEach((unit) => {
+            removeMarkers();
+            //console.log(`number of current ${markers.length} markers `);
+            layers[0].units?.map((unit,i) => {
+                //console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
                 const location = unit.location;
-                new tt.Marker()
+                const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
+                    bottom: [0,-50],
+                    "bottom-right": [0,-50],
+                    "bottom-letft": [0,-50],
+                    left: [25,-35],
+                    right: [-25, -35]}}).setHTML(
+                        `<div class='popUp'>
+                        id: ${unit.identifier} <br/>
+                        origen: ${unit.origin} <br/>
+                        destino: ${unit.destination} <br/>
+                        </div>`
+                    )
+                const markerElement = document.createElement("div")
+                markerElement.innerHTML = `<img src=${truckIcon} />`
+
+                const m = new tt.Marker({element: markerElement})
                 .setLngLat({lng:location.lng, lat:location.lat})
                 .addTo(map)
+                .setPopup(popup)
+                setMarkers(prevmarker => [...prevmarker, {id: unit.identifier, obj:m}]);
             })
-           
+
         }
+    }
+
+    const removeMarkers = () => {
+
+       markers.forEach((m) => {
+            //console.log(`'removing marker' ${m.id}`)
+             m.obj.remove();
+        })
+        setMarkers([]);
     }
 
     const timerHandler = () => {
@@ -35,19 +71,19 @@ const BeaconMap = () => {
         dispatch(fetchLayers());
     }
 
-   
+
     useEffect(()=>  {
         const ttmap = tt.map({
             key: 'GWppGGSQTAElC4Z4Qz5ZAGjsIlTh3h3G' ,
             container: mapElement.current,
             center: [mapLongitude, mapLatitude],
             zoom: mapZoom,
-    
+
          });
          setMap(ttmap);
-        
+
         return () => ttmap.remove();
-       
+
     },[])
 
     useEffect(() => {
@@ -57,7 +93,7 @@ const BeaconMap = () => {
 
     useEffect(() => {
         if (map !== undefined  && layerStatus === 'idle') {
-            console.log('dispatch fetchLayer')
+            //console.log('dispatch fetchLayer')
             dispatch(fetchLayers());
             const timer = setInterval(timerHandler, 60000);
             setTimer(timer);
@@ -66,7 +102,7 @@ const BeaconMap = () => {
 
 
     return (
-       <div ref={mapElement} className='mapDiv'/>
+            <div ref={mapElement} className='mapDiv'/>
     )
 }
 

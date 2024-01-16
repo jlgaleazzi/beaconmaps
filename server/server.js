@@ -1,14 +1,15 @@
 const express = require('express');
 const Path = require('path');
-const port = 3001;
+const port = 8080;
 const app = express();
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
 app.use((_,res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header("Access-Control-Allow-Headers",
-    "Origin. X-Requested-with, Content-Type, Accept");
+    "Origin. X-Requested-with, Content-Type, application/json, text/plain, Accept");
     next();
 });
 
@@ -39,12 +40,14 @@ app.put("/updateunits", (req, res) => {
         let jsonData = JSON.parse(data);
         console.log('updating units');
         jsonData = req.body;
-        const updatedJson = JSON.stringify()
+        const updatedJson = JSON.stringify(jsonData)
         fs.writeFile(`${__dirname}/data/data.json`, updatedJson, 'UTF8', (err) => {
             if (err) {
                 console.error('Error writing the file', err)
             } else {
-                console.log('Units updated successfully!')
+                const msg = 'Units updated successfully!'
+                console.log(msg)
+                res.send(msg)
             }
         })
     });
