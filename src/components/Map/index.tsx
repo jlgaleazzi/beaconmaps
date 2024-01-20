@@ -26,32 +26,37 @@ const BeaconMap = () => {
 
 
     const addMarkers = () => {
-        if (map !== undefined && layers[0].units)  {
+        if (map !== undefined)  {
             removeMarkers();
             //console.log(`number of current ${markers.length} markers `);
-            layers[0].units?.map((unit,i) => {
-                //console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
-                const location = unit.location;
-                const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
-                    bottom: [0,-50],
-                    "bottom-right": [0,-50],
-                    "bottom-letft": [0,-50],
-                    left: [25,-35],
-                    right: [-25, -35]}}).setHTML(
-                        `<div class='popUp'>
-                        id: ${unit.identifier} <br/>
-                        origen: ${unit.origin} <br/>
-                        destino: ${unit.destination} <br/>
-                        </div>`
-                    )
-                const markerElement = document.createElement("div")
-                markerElement.innerHTML = `<img src=${truckIcon} />`
+            layers.forEach(layer => { 
+                if (layer.visible && layer.units) {
+                    layer.units?.map((unit,i) => {
+                        //console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
+                        const location = unit.location;
+                        const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
+                            bottom: [0,-50],
+                            "bottom-right": [0,-50],
+                            "bottom-letft": [0,-50],
+                            left: [25,-35],
+                            right: [-25, -35]}}).setHTML(
+                                `<div class='popUp'>
+                                id: ${unit.identifier} <br/>
+                                origen: ${unit.origin} <br/>
+                                destino: ${unit.destination} <br/>
+                                </div>`
+                            )
+                        const markerElement = document.createElement("div")
+                        markerElement.innerHTML = `<img src=${truckIcon} />`
 
-                const m = new tt.Marker({element: markerElement})
-                .setLngLat({lng:location.lng, lat:location.lat})
-                .addTo(map)
-                .setPopup(popup)
-                setMarkers(prevmarker => [...prevmarker, {id: unit.identifier, obj:m}]);
+                        const m = new tt.Marker({element: markerElement})
+                        .setLngLat({lng:location.lng, lat:location.lat})
+                        .addTo(map)
+                        .setPopup(popup)
+                        setMarkers(prevmarker => [...prevmarker, {id: unit.identifier, obj:m}]);
+                        
+                    })
+                }
             })
 
         }
