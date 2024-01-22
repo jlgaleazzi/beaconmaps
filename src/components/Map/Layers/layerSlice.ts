@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import { Layer } from './ILayer';
 import UnitPayload from './IUnitPayload';
+import axios from 'axios';
 export interface IssueInitialState {
   layers: Layer[];
 }
@@ -30,7 +31,11 @@ export const layerSlice = createSlice({
       state.layers[layerIndex].units?.push(unit);
     },
     saveLayers: (state ) => {
-      console.log(JSON.stringify(state.layers))
+      console.log(JSON.stringify(state))
+      const body = JSON.stringify(state);
+      axios.put('http://miniserver.local:3001/updateunits',body)
+      .then(response => {console.log(JSON.stringify(response))});
+
     }
 
   },

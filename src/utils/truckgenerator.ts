@@ -1,5 +1,6 @@
 import IUnit from "../components/Map/Layers/Iunits";
 import { LatLng } from "leaflet";
+import IWarehouse from "../components/Map/Layers/Iwarehouse";
 
 
 const nombres: string[] = [
@@ -29,25 +30,43 @@ const estatus: string = [
     'Parado'
 ]
 
+const ciudades: string[] =  [
+    "CDMX",
+    "Puebla",
+    "Monterrey",
+    "Saltillo",
+    "Guadalajara",
+    "Cd. Juarez",
+    "Toluca",
+    "Merida",
+    "Queretaro",
+    "Morelia",
+    "Cancun",
+    "Chihuahua",
+    "Tijuana",
+    "Leon",
+    "Pachuca"
 
+]
 
-const getRandom = (array: any[]):any => {
+const getRandom = (array:string[]):string => {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-const truckGenerator = (position:LatLng , key:Number):IUnit => {
-    let nombreDest:string = getRandom(nombres);
-
-    let nombreOrigen:string = getRandom(nombres);
-    let truck: IUnit =  {location: position, identifier:key.toString(), origin:nombreOrigen, destination: nombreDest }
+const truckGenerator = (position:LatLng , key:number):IUnit => {
+    const nombreDest:string = getRandom(ciudades);
+    const nombreOrigen:string = getRandom(ciudades);
+    const truck: IUnit =  {location: position, identifier:key.toString(), origin:nombreOrigen, destination: nombreDest }
     console.log(JSON.stringify(truck));
     return truck
 }
 
-// generate id
-// genrate  origin
-// generate destination
-// generate date
-// generate status
 
-export default truckGenerator;
+
+const locationGenerator = (position:LatLng, key:number):IWarehouse => {
+   const warehouse: IWarehouse = {location: position, identifier:key.toString() }
+   return warehouse;
+}
+
+
+export default {truckGenerator, locationGenerator};
