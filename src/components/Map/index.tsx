@@ -4,6 +4,8 @@ import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { fetchLayers } from './Layers/layerSlice';
 import truckIcon from '../../assets/truckIcon.png'
+import warehouseIcon from '../../assets/warehouse.png'
+import IUnit from './Layers/Iunits';
 const BeaconMap = () => {
 
     interface Marker {
@@ -23,38 +25,44 @@ const BeaconMap = () => {
     const layers = useAppSelector((state) => state.layers.layers);
     const layerStatus = useAppSelector((state) => state.layers.status)
 
-
+    const popupHtml = (unit:IUnit):string => {
+        return (
+            `<div class='popUp'>
+            id: ${unit.identifier} <br/>
+            origen: ${unit.origin} <br/>
+            destino: ${unit.destination} <br/>
+            </div>`
+        )
+    }
 
     const addMarkers = () => {
         if (map !== undefined)  {
             removeMarkers();
             //console.log(`number of current ${markers.length} markers `);
-            layers.forEach(layer => { 
+            layers.forEach(layer => {
                 if (layer.visible && layer.units) {
                     layer.units?.map((unit,i) => {
                         //console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
                         const location = unit.location;
+
                         const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
                             bottom: [0,-50],
                             "bottom-right": [0,-50],
                             "bottom-letft": [0,-50],
                             left: [25,-35],
                             right: [-25, -35]}}).setHTML(
-                                `<div class='popUp'>
-                                id: ${unit.identifier} <br/>
-                                origen: ${unit.origin} <br/>
-                                destino: ${unit.destination} <br/>
-                                </div>`
+                                popupHtml(unit)
                             )
                         const markerElement = document.createElement("div")
-                        markerElement.innerHTML = `<img src=${truckIcon} />`
+                        const icon = layer.label === 'Unidades' ? truckIcon : warehouseIcon;
+                        markerElement.innerHTML = `<img src=${icon} />`
 
                         const m = new tt.Marker({element: markerElement})
                         .setLngLat({lng:location.lng, lat:location.lat})
                         .addTo(map)
                         .setPopup(popup)
                         setMarkers(prevmarker => [...prevmarker, {id: unit.identifier, obj:m}]);
-                        
+
                     })
                 }
             })
