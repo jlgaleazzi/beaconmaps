@@ -6,7 +6,8 @@ import { addUnit } from './Layers/layerSlice';
 import "leaflet/dist/leaflet.css";
 import Units from './Layers/units';
 import IUnit from './Layers/Iunits';
-import truckGenerator from '../../utils/truckgenerator';
+import {truckGenerator, locationGenerator} from '../../utils/truckgenerator';
+import IWarehouse from './Layers/Iwarehouse';
 const BeaconMap = () => {
     const dispatch = useAppDispatch();
     const layers = useAppSelector((state) => state.layers.layers);
@@ -18,9 +19,12 @@ const BeaconMap = () => {
           
             click(e) {
                 
-                const newTruck:IUnit = truckGenerator(e.latlng, unitNumber);
+                //const newTruck:IUnit = truckGenerator(e.latlng, unitNumber);
+                const newWarehouse: IWarehouse = locationGenerator(e.latlng,unitNumber )
                 setUnitNumber(unitNumber + 1);
-                dispatch(addUnit({layerId:'0',unit:newTruck}))
+                dispatch(addUnit({layerId:'0',unit:newWarehouse}))
+
+
             }
         })
         return null;

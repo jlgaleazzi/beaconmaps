@@ -69,4 +69,4 @@ const locationGenerator = (position:LatLng, key:number):IWarehouse => {
 }
 
 
-export default {truckGenerator, locationGenerator};
+export  {truckGenerator, locationGenerator};
