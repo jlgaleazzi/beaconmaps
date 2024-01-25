@@ -30,6 +30,20 @@ app.get("/units", (req , res) => {
             })
         });
 
+app.get("/warehouses", (req, res) => {
+    fs.readFile(`${__dirname}/data/warehouses.json`, 'UTF8',(err,data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send(`Internal Server Error ${JSON.stringify(__dirname)}`);
+            return
+        }
+        const jsonData = JSON.parse(data);
+        console.log('Warehouses called')
+        res.json(jsonData);
+        })
+    })
+
+
 app.put("/updateunits", (req, res) => {
     fs.readFile(`${__dirname}/data/data.json`, 'UTF8', (err,data) => {
         if (err) {

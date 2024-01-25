@@ -5,6 +5,7 @@ import { client } from  '../../../api/client'
 export interface IssueInitialState {
   layers: Layer[],
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
+  wstatus: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null | undefined,
 }
 const initialState: IssueInitialState =
@@ -13,6 +14,7 @@ const initialState: IssueInitialState =
                         {"id":"0","label":"Unidades","visible":true, "units":[]},
                         {"id":"1","label":"Almacenes","visible":true, "units":[]}],
                       status: 'idle',
+                      wstatus: 'idle',
                       error: null,
                     }
 
@@ -28,10 +30,11 @@ export const fetchUnits = createAsyncThunk('units/fetchUnits', async() => {
   return unidades
 })
 
-export const fecthWarehouses = createAsyncThunk('units/fetchWarehouse',async () => {
+export const fetchWarehouses = createAsyncThunk('units/fetchWarehouse',async () => {
   const response = await client.get('/warehouses')
- // const almacenes = response.la
-  return response;
+  const units = response.units;
+  console.log (`units ${JSON.stringify(units)}`);
+  return units;
 })
 
 export const layerSlice = createSlice({
@@ -53,19 +56,7 @@ export const layerSlice = createSlice({
     },
   },
   extraReducers : (builder) => {
-    builder.addCase(fetchLayers.pending, (state,action) => {
-      state.status = 'loading'
-      })
-    builder.addCase(fetchLayers.fulfilled , (state, action) => {
-      if (state.status === 'loading') {
-        state.status = 'succeeded'
-        state.layers = action.payload
-      }
-    })
-    builder.addCase(fetchLayers.rejected , (state, action) => {
-      state.status = 'failed'
-      state.error = action.error.message;
-    })
+
     builder.addCase(fetchUnits.pending, (state,action) => {
       state.status = 'loading'
     })
@@ -73,13 +64,27 @@ export const layerSlice = createSlice({
       if (state.status === 'loading' ) {
         state.status = 'succeeded'
        const layerIndex = state.layers.findIndex((layer) => layer.label === "Unidades");
-       //console.log(` layerIndex ${layerIndex} -> builder addCase ${action.payload}`)
        state.layers[layerIndex].units = action.payload[0].units
       }
-
     })
     builder.addCase(fetchUnits.rejected, (state, action) => {
       state.status = 'failed'
+      state.error = action.error.message;
+    })
+    builder.addCase(fetchWarehouses.pending, (state,action) => {
+     state.wstatus = 'loading'
+    })
+    builder.addCase(fetchWarehouses.fulfilled, (state,action) => {
+      console.log(`fulfilled state.action ${state.status}`)
+      console.log(`action.payload ${action.payload}`)
+      if (state.wstatus === 'loading' ) {
+        state.wstatus = 'succeeded'
+        const layerIndex = state.layers.findIndex((layer) => layer.label === "Almacenes");
+       state.layers[layerIndex].units = action.payload;
+      }
+    })
+    builder.addCase(fetchWarehouses.rejected, (state, action) => {
+      state.wstatus = 'failed'
       state.error = action.error.message;
     })
 

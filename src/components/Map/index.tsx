@@ -2,7 +2,7 @@ import {useState, useRef, useEffect, createElement}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { fetchLayers, fetchUnits } from './Layers/layerSlice';
+import { fetchLayers, fetchUnits, fetchWarehouses } from './Layers/layerSlice';
 import truckIcon from '../../assets/truckIcon.png'
 import warehouseIcon from '../../assets/warehouse.png'
 import IUnit from './Layers/Iunits';
@@ -25,14 +25,17 @@ const BeaconMap = () => {
     const layers = useAppSelector((state) => state.layers.layers);
     const layerStatus = useAppSelector((state) => state.layers.status)
 
-    const popupHtml = (unit:IUnit):string => {
-        return (
-            `<div class='popUp'>
-            id: ${unit.identifier} <br/>
-            origen: ${unit.origin} <br/>
-            destino: ${unit.destination} <br/>
-            </div>`
-        )
+    const popupHtml = (unit:IUnit, label?:string):string => {
+        const html = label === 'Unidades' ?
+        `<div class='popUp'>
+        id: ${unit.identifier} <br/>
+        origen: ${unit.origin} <br/>
+        destino: ${unit.destination} <br/>
+        </div>` :  `<div class='popUp'>
+        Almacen
+        </div>`
+        ;
+        return html
     }
 
     const addMarkers = () => {
@@ -44,17 +47,18 @@ const BeaconMap = () => {
                     layer.units?.map((unit,i) => {
                         //console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
                         const location = unit.location;
-
+                        const icon = layer.label === 'Unidades' ? truckIcon : warehouseIcon;
                         const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
                             bottom: [0,-50],
                             "bottom-right": [0,-50],
                             "bottom-letft": [0,-50],
                             left: [25,-35],
                             right: [-25, -35]}}).setHTML(
-                                popupHtml(unit)
+                                popupHtml(unit, layer.label)
                             )
                         const markerElement = document.createElement("div")
-                        const icon = layer.label === 'Unidades' ? truckIcon : warehouseIcon;
+                       // console.log(`layer.label? ${layer.label}`)
+
                         markerElement.innerHTML = `<img src=${icon} />`
 
                         const m = new tt.Marker({element: markerElement})
@@ -108,6 +112,7 @@ const BeaconMap = () => {
         if (map !== undefined  && layerStatus === 'idle') {
             console.log('dispatch fetchLayer')
             dispatch(fetchUnits());
+            dispatch(fetchWarehouses());
             const timer = setInterval(timerHandler, 60000);
             setTimer(timer);
         }
