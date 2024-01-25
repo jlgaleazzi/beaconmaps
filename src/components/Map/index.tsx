@@ -2,7 +2,7 @@ import {useState, useRef, useEffect, createElement}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { fetchLayers } from './Layers/layerSlice';
+import { fetchLayers, fetchUnits } from './Layers/layerSlice';
 import truckIcon from '../../assets/truckIcon.png'
 import warehouseIcon from '../../assets/warehouse.png'
 import IUnit from './Layers/Iunits';
@@ -81,7 +81,7 @@ const BeaconMap = () => {
 
     const timerHandler = () => {
         console.log ('timer loading');
-        dispatch(fetchLayers());
+        dispatch(fetchUnits());
     }
 
 
@@ -106,8 +106,8 @@ const BeaconMap = () => {
 
     useEffect(() => {
         if (map !== undefined  && layerStatus === 'idle') {
-            //console.log('dispatch fetchLayer')
-            dispatch(fetchLayers());
+            console.log('dispatch fetchLayer')
+            dispatch(fetchUnits());
             const timer = setInterval(timerHandler, 60000);
             setTimer(timer);
         }
