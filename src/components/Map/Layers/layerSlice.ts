@@ -24,8 +24,14 @@ export const fetchLayers = createAsyncThunk('units/fetchLayers', async() => {
 export const fetchUnits = createAsyncThunk('units/fetchUnits', async() => {
   const response = await client.get('/units')
   const unidades = response.layers.filter((el: { label: string; }) => el.label === "Unidades");
-  console.log(`fetchUnits ${JSON.stringify(unidades)}`)
+  //console.log(`fetchUnits ${JSON.stringify(unidades)}`)
   return unidades
+})
+
+export const fecthWarehouses = createAsyncThunk('units/fetchWarehouse',async () => {
+  const response = await client.get('/warehouses')
+ // const almacenes = response.la
+  return response;
 })
 
 export const layerSlice = createSlice({
@@ -67,7 +73,7 @@ export const layerSlice = createSlice({
       if (state.status === 'loading' ) {
         state.status = 'succeeded'
        const layerIndex = state.layers.findIndex((layer) => layer.label === "Unidades");
-       console.log(` layerIndex ${layerIndex} -> builder addCase ${action.payload}`)
+       //console.log(` layerIndex ${layerIndex} -> builder addCase ${action.payload}`)
        state.layers[layerIndex].units = action.payload[0].units
       }
 
