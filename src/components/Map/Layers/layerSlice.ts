@@ -18,22 +18,17 @@ const initialState: IssueInitialState =
                       error: null,
                     }
 
-export const fetchLayers = createAsyncThunk('units/fetchLayers', async() => {
-   const response = await client.get('/units')
-   return response.layers;
-},)
+
 
 export const fetchUnits = createAsyncThunk('units/fetchUnits', async() => {
   const response = await client.get('/units')
   const unidades = response.layers.filter((el: { label: string; }) => el.label === "Unidades");
-  //console.log(`fetchUnits ${JSON.stringify(unidades)}`)
   return unidades
 })
 
 export const fetchWarehouses = createAsyncThunk('units/fetchWarehouse',async () => {
   const response = await client.get('/warehouses')
   const units = response.units;
-  console.log (`units ${JSON.stringify(units)}`);
   return units;
 })
 
@@ -44,7 +39,9 @@ export const layerSlice = createSlice({
     toggleVisiblity: (state, {payload}:PayloadAction<Layer>) => {
       const {id} = payload;
       const layerIndex = state.layers.findIndex((layer) => layer.id === id);
+
       if (layerIndex !== -1) {
+        console.log( `toggleVisibility from ${id} -- ${JSON.stringify(state.layers[layerIndex].visible)}`)
         state.layers[layerIndex].visible = !state.layers[layerIndex].visible;
       }
 
@@ -75,8 +72,6 @@ export const layerSlice = createSlice({
      state.wstatus = 'loading'
     })
     builder.addCase(fetchWarehouses.fulfilled, (state,action) => {
-      console.log(`fulfilled state.action ${state.status}`)
-      console.log(`action.payload ${action.payload}`)
       if (state.wstatus === 'loading' ) {
         state.wstatus = 'succeeded'
         const layerIndex = state.layers.findIndex((layer) => layer.label === "Almacenes");

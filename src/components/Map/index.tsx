@@ -2,7 +2,7 @@ import {useState, useRef, useEffect, createElement}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { fetchLayers, fetchUnits, fetchWarehouses } from './Layers/layerSlice';
+import { fetchUnits, fetchWarehouses } from './Layers/layerSlice';
 import truckIcon from '../../assets/truckIcon.png'
 import warehouseIcon from '../../assets/warehouse.png'
 import IUnit from './Layers/Iunits';
@@ -41,11 +41,12 @@ const BeaconMap = () => {
     const addMarkers = () => {
         if (map !== undefined)  {
             removeMarkers();
-            //console.log(`number of current ${markers.length} markers `);
+            console.log(`number of current ${markers.length} markers `);
             layers.forEach(layer => {
+
                 if (layer.visible && layer.units) {
                     layer.units?.map((unit,i) => {
-                        //console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
+                        console.log (`adding unit ${JSON.stringify(unit.identifier)}`)
                         const location = unit.location;
                         const icon = layer.label === 'Unidades' ? truckIcon : warehouseIcon;
                         const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
@@ -58,7 +59,6 @@ const BeaconMap = () => {
                             )
                         const markerElement = document.createElement("div")
                        // console.log(`layer.label? ${layer.label}`)
-
                         markerElement.innerHTML = `<img src=${icon} />`
 
                         const m = new tt.Marker({element: markerElement})
@@ -75,9 +75,8 @@ const BeaconMap = () => {
     }
 
     const removeMarkers = () => {
-
        markers.forEach((m) => {
-            //console.log(`'removing marker' ${m.id}`)
+            console.log(`'removing marker' ${m.id}`)
              m.obj.remove();
         })
         setMarkers([]);
@@ -104,15 +103,15 @@ const BeaconMap = () => {
     },[])
 
     useEffect(() => {
+
        if (Array.isArray(layers) && layers.length > 0)
             addMarkers();
     },[layers])
 
     useEffect(() => {
         if (map !== undefined  && layerStatus === 'idle') {
-            console.log('dispatch fetchLayer')
             dispatch(fetchUnits());
-            dispatch(fetchWarehouses());
+            //dispatch(fetchWarehouses());
             const timer = setInterval(timerHandler, 60000);
             setTimer(timer);
         }
