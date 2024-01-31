@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import layerReducer from '../components/Map/Layers/layerSlice';
-
+import trucksReducer from '../components/Map/Layers/Unidades/trucksSlice'
 const store = configureStore({
     reducer: {
         layers: layerReducer,
+        trucks: trucksReducer,
     },
 })
 
