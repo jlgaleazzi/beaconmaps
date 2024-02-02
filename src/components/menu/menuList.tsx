@@ -4,7 +4,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
-import { toggleVisiblity } from '../Map/Layers/layerSlice';
+import { toggleVisibility } from '../Map/Layers/layerSlice'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { Layer } from '../Map/Layers/ILayer';
 
@@ -17,16 +17,16 @@ const MenuList = () => {
     }
 
     const handleToggle = (lyr:Layer) => () => {
-      
-        dispatch(toggleVisiblity(lyr))
-     
+
+        dispatch(toggleVisibility(lyr))
+
     }
 
     return (
-        <List 
+        <List
         sx={{width:'100%', maxWidth:'240px'}}
         component='nav'
-        aria-labelledby='left-menu' 
+        aria-labelledby='left-menu'
         >
         <ListItemButton onClick={handleClick}>
             <ListItemIcon>
@@ -34,15 +34,15 @@ const MenuList = () => {
             </ListItemIcon>
             <ListItemText primary ='Layers' />
             {open ? <ExpandLess /> : <ExpandMore/>}
-        </ListItemButton>    
+        </ListItemButton>
         <Collapse in={open} timeout='auto' unmountOnExit>
             <List component='div' disablePadding>
               {layers.map((layer)=> (
-                <ListItem key={layer.id} 
+                <ListItem key={layer.id}
                 secondaryAction={
                         <Checkbox edge='end'
                         onChange={handleToggle(layer)}
-                        checked={layer.visible} 
+                        checked={layer.visible}
                     />
                     }
                     disablePadding

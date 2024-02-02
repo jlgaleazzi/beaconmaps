@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 import tt from "@tomtom-international/web-sdk-maps";
+import { useAppDispatch, useAppSelector  } from "../../../../app/hooks";
 import IUnit from "../Iunits";
 import { Layer } from "../ILayer";
 import truckIcon from '../../../../assets/truckIcon.png'
-const Unidades = (map:tt.Map, layer:Layer) => {
+import { fetchTrucks } from "./trucksSlice";
 
+ interface truckProps {
+  map:tt.Map | undefined,
+  layer: Layer
+
+}
+const Unidades = (props:any) => {
+const {addMarkers} = props;
 interface Marker {
   id: string | undefined;
   obj: tt.Marker;
 }
 
 const [markers,setMarkers] = useState<Marker[]>([]);
+const dispatch = useAppDispatch();
+const trucks = useAppSelector((state) => state.trucks.units)
+const truckStatus = useAppSelector((state) => state.trucks.status)
+const layerVisible = useAppSelector((state) => state.trucks.visible)
 
   const popupHtml = (unit:IUnit, label?:string):string => {
     const html = label === 'Unidades' ?
@@ -33,37 +45,21 @@ const [markers,setMarkers] = useState<Marker[]>([]);
      setMarkers([]);
  }
 
-    const addMarkers = () => {
-      if (map !== undefined) {
-        removeMarkers();
+
+
+    useEffect(() => {
+      if ( truckStatus === 'idle') {
+        dispatch(fetchTrucks())
       }
-      if (layer.visible && layer.units) {
-        layer.units.map((unit) => {
-          const location = unit.location;
-          const icon = truckIcon;
-          const popup = new tt.Popup({closeButton:false, offset:  {top: [0,0],
-            bottom: [0,-50],
-            "bottom-right": [0,-50],
-            "bottom-letft": [0,-50],
-            left: [25,-35],
-            right: [-25, -35]}}).setHTML(
-                popupHtml(unit, layer.label)
-            )
+    },[])
 
-            const markerElement = document.createElement("div");
-
-            const m = new tt.Marker({
-              element: markerElement
-            })
-            .setLngLat({lng:location.lng, lat:location.lat})
-            .addTo(map)
-            .setPopup(popup)
-            setMarkers(prevmarker => [...prevmarker, {id:unit.identifier,obj:m}])
-
-        })
+    useEffect(() => {
+      console.log(`useEffect ${truckStatus}`)
+      if (Array.isArray(trucks) ) {
+        console.log('useEffect addMarkers')
+        addMarkers(trucks);
       }
-
-    }
+    }, [trucks, truckStatus])
 
 
 
