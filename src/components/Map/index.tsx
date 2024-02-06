@@ -1,12 +1,11 @@
-import {useState, useRef, useEffect, createElement}  from 'react';
+import {useState, useRef, useEffect}  from 'react';
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-//import { fetchUnits, fetchWarehouses } from './Layers/layerSlice';
 import { fetchTrucks } from './Layers/Unidades/trucksSlice';
 import truckIcon from '../../assets/truckIcon.png'
-import warehouseIcon from '../../assets/warehouse.png'
 import IUnit from './Layers/Iunits';
+import { fetchWarehouses } from './Layers/Unidades/warehouseSlice';
 const BeaconMap = () => {
 
     interface Marker {
@@ -27,6 +26,9 @@ const BeaconMap = () => {
 
     const trucks = useAppSelector((state) => state.trucks);
     const truckLayerStatus = useAppSelector((state) => state.trucks.status)
+
+    const warehouses = useAppSelector((state) => state.warehouses)
+    const warehouseStatus = useAppSelector((state) => state.warehouses.status)
 
     const popupHtml = (unit:IUnit):string => {
         const html =
@@ -107,20 +109,38 @@ const BeaconMap = () => {
 
     useEffect(() => {
 
-       const visibles = layersVisible.layers.filter((el) => el.visible === true)
-       console.log( `visibles ${JSON.stringify(visibles)}`);
+       const hide = layersVisible.layers.filter((el) => el.visible === false)
+       const show = layersVisible.layers.filter((el) => el.visible === true)
+       hide.forEach((layer) => {
+        if (layer.label === "Unidades") {
+            //remove layer
+            removeTruckMarkers();
+            setTrucksVisible(false);
 
+        }
+       })
+
+       show.forEach((layer) => {
+        if (layer.label === "Unidades") {
+            setTrucksVisible(true);
+            addTruckMarkers();
+        }
+       })
+       
+       
+       
     },[layersVisible])
 
     useEffect(() => {
-        console.log('useEffect visible')
         if (map !== undefined  && truckLayerStatus === 'idle') {
             dispatch(fetchTrucks());
-            //dispatch(fetchWarehouses());
+            dispatch(fetchWarehouses());
             const timer = setInterval(timerHandler, 60000);
             setTimer(timer);
         }
     }, [map, truckLayerStatus, dispatch])
+
+
 
 
     return (
