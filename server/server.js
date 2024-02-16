@@ -51,10 +51,37 @@ app.put("/updateunits", (req, res) => {
             res.status(500).send(`Internal Server Error ${JSON.stringify(__dirname)}`);
             return;
         }
-        let jsonData = JSON.parse(data);
-        console.log('updating units');
-        jsonData = req.body;
-        const updatedJson = JSON.stringify(jsonData)
+        let fileData = JSON.parse(data);
+      // loop through layers
+
+        //console.log(`from file ${JSON.stringify(jsonData)}`)
+        let newData = req.body;
+
+
+        //console.log(`new data ${JSON.stringify(newData)}`)
+        // add layer if it doesnt exists
+        newData.layers.forEach((layer) => {
+            console.log(`layer in newdata :${layer.label}`)
+            let foundLayer = fileData.layers.find(({ label }) => label === layer.label)
+            if ( foundLayer !== undefined) {
+                console.log('layer exists --> rewrite units')
+                layer.units.forEach((unit) => {
+                    let foundUnitIdx = foundLayer.units.findIndex(( { identifier }) => identifier === unit.identifier);
+                    if (foundUnitIdx !== -1) {
+                        // replace foundUnit in oldData
+                        foundLayer.units[foundUnitIdx] = unit;
+                    } else  {
+                        foundLayer.units.push(unit)
+                    }
+                })
+            } else {
+                //    add layer
+                fileData.layers.push(layer)
+            }
+
+        })
+        const updatedJson = JSON.stringify(fileData)
+
         fs.writeFile(`${__dirname}/data/data.json`, updatedJson, 'UTF8', (err) => {
             if (err) {
                 console.error('Error writing the file', err)
