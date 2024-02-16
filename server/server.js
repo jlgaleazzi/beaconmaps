@@ -1,6 +1,6 @@
 const express = require('express');
 const Path = require('path');
-const port = 80;
+const port = 8080;
 const app = express();
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -25,7 +25,6 @@ app.get("/units", (req , res) => {
             return;
         }
         const jsonData = JSON.parse(data);
-        console.log('/units called')
         res.json(jsonData);
             })
         });
@@ -38,7 +37,6 @@ app.get("/warehouses", (req, res) => {
             return
         }
         const jsonData = JSON.parse(data);
-        console.log('Warehouses called')
         res.json(jsonData);
         })
     })
@@ -52,9 +50,7 @@ app.put("/updateunits", (req, res) => {
             return;
         }
         let fileData = JSON.parse(data);
-      // loop through layers
 
-        //console.log(`from file ${JSON.stringify(jsonData)}`)
         let newData = req.body;
 
 
@@ -86,8 +82,10 @@ app.put("/updateunits", (req, res) => {
             if (err) {
                 console.error('Error writing the file', err)
             } else {
-                const msg = 'Units updated successfully!'
-                console.log(msg)
+                const date = new Date()
+
+                const msg = 'Units updated successfully! '
+                console.log(` ${msg} ${date}`)
                 res.send(msg)
             }
         })
